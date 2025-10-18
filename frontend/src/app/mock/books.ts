@@ -7,6 +7,7 @@ export const mockBooks: Book[] = [
     description: "友人を信じて走り続けるメロスの姿を描く、人間の誠実さと信頼の物語。",
     textFileUrl: "",
     imageUrl: "/mock/img/hashire_merosu.jpg",
+    progress: "10%"
   },
   {
     id: "2",

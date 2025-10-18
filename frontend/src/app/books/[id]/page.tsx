@@ -4,7 +4,7 @@ import { getBookById } from "@/app/lib/books"
 
 export default function BookPage({ params }: { params: { id: string } }) {
   const bookId = Number.parseInt(params.id)
-  const book = getBookById(bookId)
+  const book = getBookById(params.id)
 
   if (!book) {
     notFound()
