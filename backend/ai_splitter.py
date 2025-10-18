@@ -19,36 +19,21 @@ def get_packets_from_ai(full_text: str) -> list[str]:
     AI (LLM) を使って長文をパケット（文字列のリスト）に分割する関数
     """
     
-    # 設計書  に基づいたプロンプト
-    prompt = f"""
-    あなたはプロの編集者です。以下の日本語小説の本文を、100文字ずつの長さに分割してください。
-
-    # 厳守するルール
-    - 分割した結果は、必ずJSON形式の配列（リスト）で返してください。
-    - 例: ["最初のパケットの文章...", "次のパケットの文章...", "最後のパケットの文章..."]
-    - 余計な説明や前置き（「はい、承知いたしました。」など）は一切含めず、JSONの配列データのみを厳密に出力してください。
-
-    # 分割対象の本文:
-    {full_text}
-    """
-
+    # 開発用のモック実装（AI APIが利用できない場合）
     try:
-        response = model.generate_content(prompt)
+        # テキストを200文字ずつに分割
+        chunk_size = 200
+        packets = []
         
-        # AIの返答からJSON部分だけを抜き出す処理
-        cleaned_response = response.text.strip().replace("```json", "").replace("```", "").strip()
+        for i in range(0, len(full_text), chunk_size):
+            chunk = full_text[i:i + chunk_size]
+            if chunk.strip():  # 空でないチャンクのみ追加
+                packets.append(chunk)
         
-        # JSON文字列をPythonのリストに変換
-        packets_list = json.loads(cleaned_response)
+        return packets
         
-        if isinstance(packets_list, list):
-            return packets_list
-        else:
-            print("エラー: AIがJSONリスト形式で返しませんでした。")
-            return []
-
     except Exception as e:
-        print(f"AI分割エラー: {e}")
+        print(f"テキスト分割エラー: {e}")
         return []
 
 # --- 動作テスト ---
