@@ -1,20 +1,18 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
 import { mockBooks } from "@/app/mock/books";
 
-/** テキストを「2ページ」に割る（半分付近の改行で割る。なければ真ん中） */
+type SplitResponse = { boundaries: number[] };
+
 function splitIntoTwoPages(packetText: string): [string, string] {
   const len = packetText.length;
   if (len <= 1) return [packetText, ""];
   const ideal = Math.floor(len / 2);
   const window = 120;
 
-  // 半分付近の改行を探す
   const leftNewline = packetText.lastIndexOf("\n", Math.max(0, ideal));
   const rightNewline = packetText.indexOf("\n", Math.min(len - 1, ideal + 1));
-
   const pick = (pos: number) =>
     pos >= 0 && Math.abs(pos - ideal) <= window ? pos : -1;
 
@@ -30,19 +28,61 @@ export default function BookDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
 
-  const book = useMemo(() => mockBooks.find((b) => b.id === String(id)) || null, [id]);
+  const book = useMemo(() => mockBooks.find((b) => b.id === String(id)) ?? null, [id]);
 
   // 1パケット＝2ページのプレビュー（右→左想定）
-  const [subPage, setSubPage] = useState<0 | 1>(0); // 0=右ページ、1=左ページ
+  const [subPage, setSubPage] = useState<0 | 1>(0);
   const [pageR, pageL] = useMemo(
-  () => splitIntoTwoPages(book?.description ?? ""),
-  [book?.description]
+    () => splitIntoTwoPages(book?.description ?? ""),
+    [book?.description]
   );
 
-  // 左矢印で進む（右→左）
-  const goNextPage = () => setSubPage((p) => (p === 0 ? 1 : 1));
-  // 右矢印で戻る（左→右）
-  const goPrevPage = () => setSubPage((p) => (p === 1 ? 0 : 0));
+  // ← API で取得した「境界線」保存用
+  const [boundaries, setBoundaries] = useState<number[] | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  // ここで Flask に POST
+  useEffect(() => {
+    if (!book?.description) return;
+
+    const controller = new AbortController();
+    const run = async () => {
+      try {
+        setLoading(true);
+        setApiError(null);
+
+        const base = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:5000";
+        const res = await fetch(`http://localhost:5000/api/split`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ description: book.description }), // Flask 側のキーに合わせる
+          signal: controller.signal,
+        });
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(`HTTP ${res.status} ${res.statusText} ${text}`);
+        }
+
+        const json: SplitResponse = await res.json();
+        if (!Array.isArray(json.boundaries)) {
+          throw new Error("Invalid response shape: boundaries not array");
+        }
+        setBoundaries(json.boundaries);
+      } catch (e: any) {
+        setApiError(e?.message ?? String(e));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    run();
+    return () => controller.abort();
+  }, [book?.description]);
+
+  const goNextPage = () => setSubPage(1);
+  const goPrevPage = () => setSubPage(0);
 
   if (!book) {
     return (
@@ -57,25 +97,30 @@ export default function BookDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      {/* ヘッダー */}
       <div className="mb-4 flex items-center gap-3">
         <button className="text-sm underline" onClick={() => router.back()}>
           ← 戻る
         </button>
       </div>
 
-      {/* プレビュー：1パケット＝2ページ（右→左） */}
-      <section>
+      {/* API の状態表示（デバッグ用） */}
+      <div className="mb-4 text-sm">
+        {loading && <span>分割処理中...</span>}
+        {apiError && <span className="text-red-600">APIエラー: {apiError}</span>}
+        {boundaries && (
+          <div className="text-gray-600">boundaries: [{boundaries.join(", ")}]</div>
+        )}
+      </div>
 
+      <section>
         <div className="relative border rounded-2xl bg-white shadow-sm overflow-hidden min-h-[700px]">
-          {/* 横書き。縦書きにするなら writing-mode を vertical-rl に変更 */}
           <div className="p-5 flex justify-center">
             <div
               className="whitespace-pre-wrap text-lg inline-block w-[420px]"
               style={{
-                writingMode: "vertical-rl",   // 縦書き（右→左へ行送り）
-                textOrientation: "mixed",     // ラテン文字は横向き、日本語は縦
-                lineHeight: "1.9",            // 行間（縦方向の字送り）
+                writingMode: "vertical-rl",
+                textOrientation: "mixed",
+                lineHeight: "1.9",
               }}
             >
               {subPage === 0 ? pageR : pageL}
@@ -103,7 +148,6 @@ export default function BookDetailPage() {
           </button>
         </div>
 
-        {/* ページインジケータ */}
         <div className="mt-2 text-right text-xs text-gray-600">
           {subPage === 0 ? "1ページ目（右）" : "2ページ目（左）"}
         </div>
