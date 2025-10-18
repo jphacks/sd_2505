@@ -44,7 +44,7 @@ export default function BookDetailPage() {
   const goNextPage = () => setSubPage((p) => (p === 0 ? 1 : 1));
   // 右矢印で戻る（左→右）
   const goPrevPage = () => setSubPage((p) => (p === 1 ? 0 : 0));
-
+  
   if (!book) {
     return (
       <div className="max-w-3xl mx-auto p-6">

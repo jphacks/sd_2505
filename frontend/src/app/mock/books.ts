@@ -12,6 +12,7 @@ export const mockBooks: Book[] = [
     読書方向は右→左なので、左矢印で進む・右矢印で戻る UI を実装します。`,
     textFileUrl: "",
     imageUrl: "/mock/img/hashire_merosu.jpg",
+    progress: "10%"
   },
   {
     id: "2",

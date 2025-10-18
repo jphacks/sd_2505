@@ -1,32 +1,14 @@
-export interface Book {
-  id: number
-  title: string
-  author: string
-  progress?: string
-}
-
-export const booksData: Book[] = [
-  {
-    id: 1,
-    title: "BookA",
-    author: "AuthorA",
-    progress: "10%",
-  },
-  {
-    id: 2,
-    title: "BookB",
-    author: "AuthorB",
-  }
-]
+import { mockBooks } from "../mock/books"
+import { Book } from "@/types/book"
 
 export function getCurrentlyReadingBooks(): Book[] {
-  return booksData.filter((book) => book.progress)
+  return mockBooks.filter((mockBooks) => mockBooks.progress)
 }
 
-export function getBookById(id: number): Book | undefined {
-  return booksData.find((book) => book.id === id)
+export function getBookById(id: string): Book | undefined {
+  return mockBooks.find((mockBooks) => mockBooks.id === id)
 }
 
 export function getOtherBooks(): Book[] {
-  return booksData.filter((book) => !book.progress)
+  return mockBooks.filter((mockBooks) => !mockBooks.progress)
 }

@@ -22,8 +22,8 @@ export default function Home() {
       <h1 className="mb-12 text-4xl font-light tracking-tight text-foreground">Book List</h1>
 
       <section className="mb-16">
-        <h2 className="mb-6 text-2xl font-normal text-foreground">Reading now</h2>
-        <div className="flex flex-col gap-3">
+        <h2 className="mb-6 text-2xl font-normal text-foreground">Reading Now</h2>
+        <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
           {currentReadings.map((book) => (
             <BookCard key={book.id} {...book} />
           ))}
@@ -32,24 +32,12 @@ export default function Home() {
       
       <section className='mb-16'>
           <h1 className='mb-6 text-2xl font-normal text-foreground'>New Books</h1>
-          <div className='flex flex-col gap-3'>
+          <div className='grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3'>
             {otherBooks.map((book) => (
               <BookCard key={book.id} {...book} />
             ))}
           </div>
       </section>
-
-      {mockBooks.map((b) => (
-        <div key={b.id} className="border rounded-lg p-3 mb-2 flex items-center justify-between">
-          <div>
-            <div className="font-medium">{b.title}</div>
-            <div className="text-sm text-gray-600">{b.author}</div>
-            <p className="text-sm text-gray-700 mt-1">{b.description}</p>
-          </div>
-          <button className="px-3 py-2 border rounded">読む</button>
-        </div>
-      ))}
-
     </div>
   );
 }
