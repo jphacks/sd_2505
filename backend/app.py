@@ -22,6 +22,7 @@ def split_book_text():
     data = request.json
     full_text = data.get('description')
 
+
     if not full_text:
         return jsonify({"error": "本文テキスト ('text') がありません"}), 400
 
@@ -46,4 +47,4 @@ def split_book_text():
 # サーバーを起動
 if __name__ == '__main__':
     # ハッカソン中は、チームメンバーがアクセスできるように host='0.0.0.0' を指定
-    app.run(debug=True, host='0.0.0.0', port=3000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
