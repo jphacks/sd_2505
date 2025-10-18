@@ -20,7 +20,8 @@ def split_book_text():
     
     # 1. フロントエンドから送信されたJSONから 'text' を取り出す
     data = request.json
-    full_text = data
+    full_text = data.get('description')
+
 
     if not full_text:
         return jsonify({"error": "本文テキスト ('text') がありません"}), 400
