@@ -180,7 +180,6 @@ export default function BookDetailPage() {
   };
 
   const goPrevPage = () => {
-    if (maskState.isLocked) return; // ロック中は移動不可
     
     if (subPage === 1) {
       setSubPage(0);
@@ -292,15 +291,16 @@ export default function BookDetailPage() {
       )}
 
 <section>
-  <div className="relative border rounded-2xl bg-white shadow-sm overflow-hidden max-h-[700px] flex justify-center items-center">
+<div className="relative border rounded-2xl bg-white shadow-sm overflow-x-auto min-h-[700px] flex justify-end items-center px-16">
     
     {/* 本文エリア（常に中央） */}
     <div
-      className="whitespace-pre-wrap text-lg inline-block w-[420px] p-4 px-10 ml-20"
+      className="whitespace-pre-wrap text-lg inline-block p-4"
       style={{
         writingMode: "vertical-rl",
         textOrientation: "mixed",
         lineHeight: "1.9",
+        width: `${GRID_COLS}em`,
       }}
     >
       {subPage === 0 ? pageR : pageL}
