@@ -17,6 +17,10 @@ export default function Home() {
   }, []);
 
   return (
+    <div>
+      <header className='bg-gray-100 '>
+        <nav className='mx-auto flex max-w-7xl items-center justify-center p-6 lg:px-8 text-lg font-semibold'>すきま文庫</nav>
+      </header>
     <div className='mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8'>
       <p>{message}</p>
       <h1 className="mb-12 text-4xl font-light tracking-tight text-foreground">Book List</h1>
@@ -38,6 +42,7 @@ export default function Home() {
             ))}
           </div>
       </section>
+    </div>
     </div>
   );
 }

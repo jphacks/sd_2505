@@ -228,7 +228,7 @@ export const mockBooks: Book[] = [
 「命より大切なものがあるのです。」
 そう言って、再び走り出した。`,
     textFileUrl: "",
-    imageUrl: "/mock/img/hashire_merosu.jpg",
+    imageUrl: "/img/hashire_merosu.jpg",
     progress: "10%"
   },
   {
@@ -237,7 +237,7 @@ export const mockBooks: Book[] = [
     author: "夏目漱石",
     description: "正義感の強い青年教師が田舎の学校で奮闘する痛快な学園小説。",
     textFileUrl: "",
-    imageUrl: "/mock/img/botchan.jpg",
+    imageUrl: "/img/botchan.jpg",
   },
   {
     id: "3",
@@ -245,7 +245,7 @@ export const mockBooks: Book[] = [
     author: "夏目漱石",
     description: "「先生」と「私」の交流を通して、人間の孤独と罪を描いた名作。",
     textFileUrl: "",
-    imageUrl: "/mock/img/kokoro.jpg",
+    imageUrl: "/img/kokoro.jpg",
   },
   {
     id: "4",
@@ -253,7 +253,7 @@ export const mockBooks: Book[] = [
     author: "宮沢賢治",
     description: "ジョバンニとカンパネルラが銀河を旅しながら、命と幸福の意味を見つめる幻想的な物語。",
     textFileUrl: "",
-    imageUrl: "/mock/img/ginga.jpg",
+    imageUrl: "/img/ginga.jpg",
   },
   {
     id: "5",
@@ -261,7 +261,7 @@ export const mockBooks: Book[] = [
     author: "夏目漱石",
     description: "「吾輩は猫である」で始まる、人間社会を風刺したユーモア文学の傑作。",
     textFileUrl: "",
-    imageUrl: "/mock/img/neko.jpg",
+    imageUrl: "/img/neko.jpg",
   },
   {
     id: "6",
@@ -269,7 +269,7 @@ export const mockBooks: Book[] = [
     author: "芥川龍之介",
     description: "荒廃した京都を舞台に、人間のエゴと生への執念を描く短編。",
     textFileUrl: "",
-    imageUrl: "/mock/img/rashomon.jpg",
+    imageUrl: "/img/rashomon.jpg",
   },
   {
     id: "7",
@@ -277,7 +277,7 @@ export const mockBooks: Book[] = [
     author: "川端康成",
     description: "雪深い温泉街での男女の儚い恋を、美しい描写で描いた日本文学の名作。",
     textFileUrl: "",
-    imageUrl: "/mock/img/yukiguni.jpg",
+    imageUrl: "/img/yukiguni.jpg",
   },
   {
     id: "8",
@@ -285,7 +285,7 @@ export const mockBooks: Book[] = [
     author: "太宰治",
     description: "自分を「人間失格」と語る主人公の告白を通して、人間の弱さを突きつける問題作。",
     textFileUrl: "",
-    imageUrl: "/mock/img/shikkaku.jpg",
+    imageUrl: "/img/shikkaku.jpg",
   },
   {
     id: "9",
@@ -293,7 +293,7 @@ export const mockBooks: Book[] = [
     author: "宮沢賢治",
     description: "宮沢賢治が理想とした“強く優しい人間像”を詩的に表現した代表作。",
     textFileUrl: "",
-    imageUrl: "/mock/img/amenimo.jpg",
+    imageUrl: "/img/amenimo.jpg",
   },
   {
     id: "10",
@@ -301,6 +301,6 @@ export const mockBooks: Book[] = [
     author: "太宰治",
     description: "没落貴族の娘を通して、戦後日本の価値観の変化を描いた社会小説。",
     textFileUrl: "",
-    imageUrl: "/mock/img/shayou.jpg",
+    imageUrl: "/img/shayou.jpg",
   },
 ];

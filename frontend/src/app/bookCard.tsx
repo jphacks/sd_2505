@@ -3,6 +3,12 @@
 import Link from "next/link"
 import { Book } from "@/types/book"
 import { mockBooks } from "./mock/books"
+import { timeIcon } from './components/timeLeft';
+import Image, { StaticImageData } from "next/image";
+
+import bookIcon from "img/book.svg";
+
+
 
 interface BookCardProps {
   id: number
@@ -10,6 +16,10 @@ interface BookCardProps {
   author: string
   progress?: string
 }
+
+const bookCover: {[key: string]} = {
+  
+} 
 
 export function BookCard({ id, title, author, progress, imageUrl }: Book) {
   return (
@@ -19,12 +29,13 @@ export function BookCard({ id, title, author, progress, imageUrl }: Book) {
     >
       <div className="flex flex-col">
         {/* Book cover area with icon */}
-        <div className="flex items-center justify-center bg-primary/5 p-12 rounded-t-lg">
-          <img src={imageUrl} className="h-16 w-16 text-primary/40"/>
+        <div className="relative items-center justify-center bg-primary/5 p-12 rounded-t-lg">
+          {progress && (timeIcon())}
+          
         </div>
 
         {/* Book info area */}
-        <div className="p-4 space-y-2">
+        <div className="position-relative p-4 space-y-2">
           <h3 className="text-base font-medium leading-snug text-foreground group-hover:text-accent-foreground line-clamp-2">
             {title}
           </h3>

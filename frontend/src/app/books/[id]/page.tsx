@@ -245,7 +245,7 @@ export default function BookDetailPage() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="mb-4 flex items-center gap-3">
-        <button className="text-sm underline" onClick={() => router.back()}>
+        <button className="text-sm underline hover:bg-gray-100" onClick={() => router.back()}>
           ← 戻る
         </button>
       </div>
