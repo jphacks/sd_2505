@@ -19,12 +19,15 @@ def split_book_text():
     """
     
     # 1. フロントエンドから送信されたJSONから 'text' を取り出す
-    data = request.json
-    full_text = data.get('description')
+    # 1) JSONの取り出しを安全に
+    data = request.get_json(silent=True) or {}
 
+    # 2) 両方のキーに対応（description優先、無ければtext）
+    full_text = data.get("description") or data.get("text")
 
     if not full_text:
-        return jsonify({"error": "本文テキスト ('text') がありません"}), 400
+        return jsonify({"error": "本文テキスト（'description' または 'text'）がありません"}), 400
+
 
     # 2. AIを使って、テキストを文字列のリストに分割する (ai_splitter.py を呼ぶ)
     packet_strings = get_packets_from_ai(full_text)
