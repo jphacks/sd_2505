@@ -271,11 +271,6 @@ export default function BookDetailPage() {
       <div className="mb-4 text-sm">
         {loading && <span className="text-blue-600">分割処理中...</span>}
         {apiError && <span className="text-red-600">APIエラー: {apiError}</span>}
-        {boundaries && (
-          <div className="text-gray-600">
-            boundaries: [{boundaries.join(", ")}]
-          </div>
-        )}
       </div>
 
       {/* ロック状態表示 */}
@@ -301,7 +296,7 @@ export default function BookDetailPage() {
     
     {/* 本文エリア（常に中央） */}
     <div
-      className="whitespace-pre-wrap text-lg inline-block w-[420px] p-4 px-10 ml-16"
+      className="whitespace-pre-wrap text-lg inline-block w-[420px] p-4 px-10 ml-20"
       style={{
         writingMode: "vertical-rl",
         textOrientation: "mixed",

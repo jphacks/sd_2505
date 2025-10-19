@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { BookCard } from './bookCard';
 import { getCurrentlyReadingBooks, getOtherBooks } from './lib/books';
 import { mockBooks } from './mock/books';
+import FAQ from './components/FAQ';
+import Footer from './components/footer';
 
 const currentReadings = getCurrentlyReadingBooks();
 const otherBooks = getOtherBooks();
@@ -47,6 +49,8 @@ export default function Home() {
           </div>
       </section>
     </div>
+    <FAQ/>
+    <Footer/>
     </div>
   );
 }
