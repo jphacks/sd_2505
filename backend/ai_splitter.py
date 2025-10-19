@@ -1,60 +1,59 @@
 # ai_splitter.py
+import os, json
+from pathlib import Path
+from dotenv import load_dotenv
 
-import os
-import google.generativeai as genai 
-from dotenv import load_dotenv  
-import json
+# このファイルと同じディレクトリの .env を必ず読む
+ENV_PATH = Path(__file__).with_name(".env")
+load_dotenv(dotenv_path=ENV_PATH, override=True)
 
-# .envファイルから環境変数を読み込む
-load_dotenv()
+# どちらの環境変数名でも拾う
+API_KEY = (os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY") or "").strip()
+if not API_KEY:
+    raise RuntimeError(f"APIキー未設定: {ENV_PATH} に GOOGLE_API_KEY か GEMINI_API_KEY を定義して")
 
-# APIキーを設定
-genai.configure(api_key=os.getenv("AIzaSyBp3C5ZTDKY7R28RjmDxEjck4jXD76g1MA"))
-
-# 使用するモデルを設定
-model = genai.GenerativeModel('gemini-pro-latest')
+# ---- 新SDK（google-genai）を使う場合 ----
+from google import genai
+client = genai.Client(api_key=API_KEY)
+MODEL = "gemini-2.5-flash"  # 好みで変更可
 
 def get_packets_from_ai(full_text: str) -> list[str]:
     """
-    AI (LLM) を使って長文をパケット（文字列のリスト）に分割する関数
+    AIを使って長文を100文字ごとに分割する。
+    JSONリストとして返す。
     """
-    
-    # 設計書  に基づいたプロンプト
     prompt = f"""
     あなたはプロの編集者です。以下の日本語小説の本文を、100文字ずつの長さに分割してください。
 
-    # 厳守するルール
-    - 分割した結果は、必ずJSON形式の配列（リスト）で返してください。
-    - 例: ["最初のパケットの文章...", "次のパケットの文章...", "最後のパケットの文章..."]
-    - 余計な説明や前置き（「はい、承知いたしました。」など）は一切含めず、JSONの配列データのみを厳密に出力してください。
+    # 厳守ルール
+    - 分割結果はJSON配列として返してください。
+    - 例: ["最初のパケット...", "次のパケット...", "最後のパケット..."]
+    - 説明文や余計な文字は出力しない。
 
-    # 分割対象の本文:
+    # 本文:
     {full_text}
-    """
+    """.strip()
 
     try:
-        response = model.generate_content(prompt)
-        
-        # AIの返答からJSON部分だけを抜き出す処理
-        cleaned_response = response.text.strip().replace("```json", "").replace("```", "").strip()
-        
-        # JSON文字列をPythonのリストに変換
-        packets_list = json.loads(cleaned_response)
-        
-        if isinstance(packets_list, list):
-            return packets_list
-        else:
-            print("エラー: AIがJSONリスト形式で返しませんでした。")
-            return []
-
+        response = client.models.generate_content(
+            model=MODEL,
+            contents=prompt
+        )
+        text = (response.text or "").strip()
+        text = text.replace("```json", "").replace("```", "").strip()
+        packets = json.loads(text)
+        if isinstance(packets, list):
+            return packets
+        print("AI出力がJSON配列ではありません。")
+        return []
     except Exception as e:
         print(f"AI分割エラー: {e}")
         return []
 
-# --- 動作テスト ---
-if __name__ == '__main__':
-    sample_text = "その晩、私は隣室のアレキサンダー君に案内されて、始めて横浜へ遊びに出かけた。アレキサンダー君は、そんな遊び場所に就いてなら、日本人の私なんぞよりも、遙かに詳かに心得ていた。アレキサンダー君は、その自ら名告るところに依れば、旧露国帝室付舞踏師で、革命後上海から日本へ渡って来たのだが、踊を以て生業とすることが出来なくなって、今では銀座裏の、西洋料理店某でセロを弾いていると云う、つまり街頭で、よく見かける羅紗売りより僅かばかり上等な類のコーカサス人である。それでも、遉にコーカサス生れの故か、髪も眼も真黒で却々眉目秀麗な男だったので、貧乏なのにも拘らず、居留地女の間では、格別可愛がられているらしい。――アレキサンダー君は、露西亜語の他に、拙い日本語と、同じ位拙い英語とを喋ることが出来る。桜木町の駅に降りたのが、かれこれ九時時分だったので、私達は、先ず暗い波止場の方を廻って、山下町の支那街へ行った。そして、誰でも知っているインタアナショナル酒場でビールを飲んだ。ここの家はどう云う理由か、エビス・ビールを看板にしているが、私はずっと前に、矢張りその界隈にあるハムブルグ酒場で、大変美味しいピルゼンのビールを飲んだことがあった。独逸へ行こうと思っていた頃で、そこの酒場に居合せた軍艦エムデン号の乗組員だったと称する変な独逸人に、ハイデルベルヒの大学へ入る第一の資格は、ビールを四打飲めることだと唆かされて、私はピルズナア・ビールを二打飲んだのであった。『そのエムデンは店の人です、つまりサクラですね。――』と、アレキサンダー君はハムブルクを斥けた。『それに、あすこには、こんな別嬪さん一人もいませんです。つまらないですね。』アレキサンダー君は、さう云いながら、私達の卓子を囲んで集まった、各自国籍の異るらしい四五人の女給の中で、一番器量良しの細い眼をした、金髪の少女の頤を指でつついたものだ。『マルウシャ！日本人の小説を書く人に惚れています。――マルウシャ、云いなさい！』その少女の噂は、私も既に聞いていた。彼女は私に、××氏から貰ったのだと云う手巾を見せたりした。それから彼女は、アレキサンダー君と組んで踊った。ストーヴの傍にいた家族の者らしい老夫婦が、ヴァイオリンと竪琴とで［＃「竪琴とで」は底本では「堅琴とで」］それに和した。私はエビス・ビールが我慢出来なかったので、酒台のところに立って火酒を飲んだ。若い時分には、可なりの美人だったらしい面影を留めている女主人が、酒をつぎ乍ら私の話相手になってくれた。いいよ　君が死ねば僕だって死ぬよ私達は予定通り、恰度一時間を費して、インタアナショナルを出た。真暗な河岸通りに青い街灯が惨めに凍えて、烈しい海の香りをふくんだ夜風が吹きまくっていた。元町へ抜けて、バンガロオへ寄って、そこで十二時になるのを待った。アレキサンダー君が、このダンス場の看板時間まで踊り度いと云うので、踊の出来ない私は、ぼんやりウイスキーを舐めるばかりで、旺んなホールの光景を見物しながら待っていたわけである。へべれけに酔っぱらった大そう年をとり過ぎた踊子が、私の傍へ来て、ポートワインをねだるので、振舞ってやると、やがて彼女は、ダンス位出来なくては可哀相だから、教えてやると云って、私の両手を掴んで立ち上がるのであった。だが、彼女は直ぐに、蝋引きの床の上に滑ってころがった。何度でもころがった。"
 
-    result_packets = get_packets_from_ai(sample_text)
-    print("--- 分割結果 (文字列リスト) ---")
-    print(result_packets)
+# --- 動作テスト ---
+if __name__ == "__main__":
+    sample_text = "これはテスト用の文章です。" * 10
+    packets = get_packets_from_ai(sample_text)
+    print("--- 分割結果 ---")
+    print(packets)
