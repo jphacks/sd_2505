@@ -20,16 +20,29 @@ export default function Home() {
 
   return (
     <div>
-      <header className='bg-black shadow-lg'>
-        <nav className='bg-neutral-900 text-gray-300 py-6 text-center border-t border-neutral-800 text-lg font-semibold'>すきま文庫</nav>
-      </header>
-      <div className='py-40 text-center'>
-        <h1 className='text-4xl md:text-6xl font-extrabold text-gray-800 py-10 tracking-tight'>「いつか読もう」？ 今日から読もう</h1>
-        <p></p>
-      </div>
+    <div
+  className="relative bg-cover bg-center bg-fixed text-white"
+  style={{
+    backgroundImage: "url('/library-bg.jpg')", // public配下に画像を置く
+  }}
+>
+  <header className="shadow-lg backdrop-blur-sm">
+    <nav className="bg-neutral-900/70 text-gray-200 py-6 text-center text-lg font-semibold">
+      すきま文庫
+    </nav>
+  </header>
+
+  <div className="flex flex-col items-center justify-center py-40 px-4 text-center bg-black/40">
+    <h1 className="text-4xl md:text-6xl font-extrabold text-white tracking-tight drop-shadow-md">
+      「いつか読もう」？ 今日から読もう
+    </h1>
+    <p className="mt-4 text-lg md:text-xl text-gray-200 italic">
+      ~ 読書が続かないと思っている方へ ~
+    </p>
+  </div>
+</div>
+
     <div className='mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8'>
-      <p>{message}</p>
-      <h1 className="mb-12 text-4xl font-light tracking-tight text-foreground">Book List</h1>
 
       <section className="mb-16">
         <h2 className="mb-6 text-2xl font-normal text-foreground">Reading Now</h2>
