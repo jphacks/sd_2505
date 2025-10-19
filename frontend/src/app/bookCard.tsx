@@ -46,7 +46,7 @@ export function BookCard({ id, title, author, progress, imageUrl }: Book) {
             alt={`${imageUrl}`}
             width={150}
             height={100}
-            className="transition-transform duration-300 group-hover:scale-110"
+            className="object-fill overflow-clip duration-300 group-hover:scale-110"
           />
         </div>
 

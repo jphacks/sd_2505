@@ -229,7 +229,7 @@ export const mockBooks: Book[] = [
 そう言って、再び走り出した。`,
     textFileUrl: "",
     imageUrl: "/img/hashire_merosu.jpg",
-    progress: "10%"
+    progress: "0%"
   },
   {
     id: "2",

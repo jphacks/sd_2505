@@ -20,9 +20,13 @@ export default function Home() {
 
   return (
     <div>
-      <header className='bg-gray-100 '>
-        <nav className='mx-auto flex max-w-7xl items-center justify-center p-6 lg:px-8 text-lg font-semibold'>すきま文庫</nav>
+      <header className='bg-black shadow-lg'>
+        <nav className='bg-neutral-900 text-gray-300 py-6 text-center border-t border-neutral-800 text-lg font-semibold'>すきま文庫</nav>
       </header>
+      <div className='py-40 text-center'>
+        <h1 className='text-4xl md:text-6xl font-extrabold text-gray-800 py-10 tracking-tight'>「いつか読もう」？ 今日から読もう</h1>
+        <p></p>
+      </div>
     <div className='mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8'>
       <p>{message}</p>
       <h1 className="mb-12 text-4xl font-light tracking-tight text-foreground">Book List</h1>
